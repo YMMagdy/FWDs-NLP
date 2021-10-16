@@ -70,4 +70,4 @@ const polarityCheck=(p)=>{
 }
 
 export { handleSubmit }
-export{checkPolarity}
+export{polarityCheck}
