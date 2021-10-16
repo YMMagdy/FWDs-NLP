@@ -10,12 +10,26 @@ function handleSubmit(event) {
     console.log("::: Form Submitted :::")
     postReq('http://localhost:8081/api',{url:formText})
     .then(function(res) {
-        document.getElementById('polarity').innerHTML = 'Polarity: ' + checkPolarity(res.score_tag)
-        document.getElementById('agreement').innerHTML=`Agreement: + ${res.agreement}`
-        document.getElementById('subjectivity').innerHTML = `Subjectivity: + ${res.subjectivity}`
-        document.getElementById('confidence').innerHTML = `Confidence: + ${res.confidence}`
-        document.getElementById('irony').innerHTML = `Irony: + ${res.irony}`
-    })
+        document.getElementById('results').innerHTML=''
+        var s=document.createElement('strong')
+        s.innerHTML ="Form Results:"
+        var pol=document.createElement('div')
+        pol.innerHTML='Polarity: '+polarityCheck(res.score_tag)
+        var agr = document.createElement('div')
+        agr.innerHTML = `Agreement: + ${res.agreement}`
+        var sub = document.createElement('div')
+        sub.innerHTML = `Subjectivity: + ${res.subjectivity}`
+        var con = document.createElement('div')
+        con.innerHTML = `Confidence: + ${res.confidence}`
+        var ir = document.createElement('div')
+        ir.innerHTML = `Irony: + ${res.irony}`
+        document.getElementById('results').appendChild(s)
+        document.getElementById('results').appendChild(pol)
+        document.getElementById('results').appendChild(agr)
+        document.getElementById('results').appendChild(sub)
+        document.getElementById('results').appendChild(con)
+        document.getElementById('results').appendChild(ir)
+        })
 }
 else{
     alert('Invalid URL')
@@ -33,28 +47,25 @@ async function postReq(url="",data={}){
         body:JSON.stringify(data)
     })
     try{
-        const receivedData=await res.json()
-        console.log('Received Data',receivedData)
-        return receivedData
+        const recData=await res.json()
+        return recData
     }catch (error){
         console.log('error',error)
     }
 }
 
-const checkPolarity=(p)=>{
+const polarityCheck=(p)=>{
     let text=''
-    switch (p){
-        case 'P+':
-            text='Strong Positive'
-        case 'P':
-            text='Positive'
-        case 'N':
-            text='Negative'
-        case 'N+':
-            text='Strong Negative'
-        case 'NONE':
-            text='No Sentiment'
-    }
+    if (p === 'P+')
+        text='Strong Positive'
+    else if(p==='P')
+        text='Positive'
+    else if (p ==='N')
+        text='Negative'
+    else if (p ==='N+')
+        text='Strong Negative'
+    else
+        text='No Sentiment'
     return text
 }
 
